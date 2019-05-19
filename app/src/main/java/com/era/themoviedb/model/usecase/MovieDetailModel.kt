@@ -6,6 +6,7 @@ import com.era.themoviedb.model.data.repository.entity.Video
 import com.era.themoviedb.contract.MvpMovieDetail
 import com.era.themoviedb.view.entity.Category
 import com.era.themoviedb.view.entity.YoutubeVideo
+import com.orhanobut.logger.Logger
 import com.era.themoviedb.view.entity.Movie as MovieView
 import com.era.themoviedb.view.entity.MovieDetail as MovieDetailView
 import com.era.themoviedb.model.data.repository.entity.Movie as MovieModel

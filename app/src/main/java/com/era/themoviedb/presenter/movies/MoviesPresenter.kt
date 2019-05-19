@@ -5,6 +5,7 @@ import com.era.themoviedb.contract.movies.MvpMovies
 import com.era.themoviedb.contract.movies.MvpPopularMovies
 import com.era.themoviedb.contract.movies.MvpTopRatedMovies
 import com.era.themoviedb.contract.movies.MvpUpcomingMovies
+import com.era.themoviedb.framework.rx.AndroidDisposable
 import com.era.themoviedb.view.entity.Category
 import com.era.themoviedb.view.entity.Movie
 
@@ -14,6 +15,7 @@ class MoviesPresenter(private val model : MvpMovies.Model,
                       private val topRatedMoviesPresenterMovies : MvpTopRatedMovies.Presenter,
                       private val UpcomingMoviesPresenterMovies : MvpUpcomingMovies.Presenter) : MvpMovies.Presenter {
 
+    override val disposables by lazy{ AndroidDisposable() }
     private var view : MvpMovies.View ? = null
     private var categorySelected : Category = Category.Popular
 

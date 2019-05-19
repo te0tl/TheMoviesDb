@@ -3,6 +3,7 @@ package com.era.themoviedb.model.data.repository
 import com.era.themoviedb.model.data.repository.entity.*
 import com.era.themoviedb.model.data.service.Retrofit
 import com.era.themoviedb.model.data.service.TheMoviesDbApi
+import com.orhanobut.logger.Logger
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.Single

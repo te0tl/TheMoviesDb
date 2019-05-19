@@ -3,10 +3,12 @@ package com.era.themoviedb.presenter.movies
 import com.era.themoviedb.contract.common.BasePresenter
 import com.era.themoviedb.contract.common.BaseView
 import com.era.themoviedb.contract.movies.MvpUpcomingMovies
+import com.era.themoviedb.framework.rx.AndroidDisposable
 import com.era.themoviedb.view.entity.Movie
 import io.reactivex.rxkotlin.subscribeBy
 
 class UpcomingMoviesPresenter(private val model : MvpUpcomingMovies.Model) : MvpUpcomingMovies.Presenter {
+    override val disposables by lazy{ AndroidDisposable() }
     private var view: MvpUpcomingMovies.View? = null
     private var page = 0
 

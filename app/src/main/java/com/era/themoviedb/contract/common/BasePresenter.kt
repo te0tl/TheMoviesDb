@@ -4,7 +4,7 @@ import com.era.themoviedb.framework.rx.AndroidDisposable
 
 interface BasePresenter {
 
-    val disposables: AndroidDisposable get() = AndroidDisposable()
+    val disposables: AndroidDisposable
 
     fun onViewAvailable(view: BaseView?)
 

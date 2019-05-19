@@ -2,9 +2,12 @@ package com.era.themoviedb.presenter
 
 import com.era.themoviedb.contract.common.BaseView
 import com.era.themoviedb.contract.MvpSplash
+import com.era.themoviedb.framework.rx.AndroidDisposable
 
 
 class SplashPresenter(private val model : MvpSplash.Model) : MvpSplash.Presenter {
+
+    override val disposables by lazy{ AndroidDisposable()}
 
     private var view : MvpSplash.View ? = null
 
