@@ -9,9 +9,7 @@ import com.orhanobut.logger.Logger
 import io.reactivex.rxkotlin.subscribeBy
 
 
-class MovieDetailPresenter(private val model : MvpMovieDetail.Model) : MvpMovieDetail.Presenter {
-
-    override val disposables by lazy{ AndroidDisposable()}
+class MovieDetailPresenter(private val model : MvpMovieDetail.Model, override val disposables : AndroidDisposable) : MvpMovieDetail.Presenter {
 
     private var view : MvpMovieDetail.View ? = null
 

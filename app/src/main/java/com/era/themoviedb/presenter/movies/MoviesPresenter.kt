@@ -10,12 +10,11 @@ import com.era.themoviedb.view.entity.Category
 import com.era.themoviedb.view.entity.Movie
 
 
-class MoviesPresenter(private val model : MvpMovies.Model,
+class MoviesPresenter(private val model : MvpMovies.Model, override val disposables : AndroidDisposable,
                       private val popularMoviesPresenterMovies : MvpPopularMovies.Presenter,
                       private val topRatedMoviesPresenterMovies : MvpTopRatedMovies.Presenter,
                       private val UpcomingMoviesPresenterMovies : MvpUpcomingMovies.Presenter) : MvpMovies.Presenter {
 
-    override val disposables by lazy{ AndroidDisposable() }
     private var view : MvpMovies.View ? = null
     private var categorySelected : Category = Category.Popular
 

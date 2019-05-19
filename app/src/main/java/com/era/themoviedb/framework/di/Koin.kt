@@ -12,6 +12,7 @@ import com.era.themoviedb.model.usecase.MovieDetailModel
 import com.era.themoviedb.model.usecase.SplashModel
 import com.era.themoviedb.contract.*
 import com.era.themoviedb.contract.movies.*
+import com.era.themoviedb.framework.rx.AndroidDisposable
 import com.era.themoviedb.presenter.*
 import com.era.themoviedb.presenter.movies.*
 import org.koin.core.qualifier.named
@@ -24,11 +25,12 @@ val appContext by inject<Context>()
 val appModule = module {
     single <TheMoviesDbApi> { Retrofit.retrofitMovies.create(TheMoviesDbApi::class.java) }
     single <MoviesRepository> { MoviesRepositoryTheMovieDbOrg() }
+    factory <AndroidDisposable> { AndroidDisposable() }
 }
 
 val splashModule = module {
     factory <MvpSplash.Model> { SplashModel() }
-    factory <MvpSplash.Presenter> { SplashPresenter(get()) }
+    factory <MvpSplash.Presenter> { SplashPresenter(get(), get()) }
 }
 
 const val KOIN_MAIN_MOVIES_SCOPE = "KOIN_MAIN_MOVIES_SCOPE"
@@ -39,15 +41,15 @@ val moviesModule = module {
         scoped <MvpTopRatedMovies.Model> { TopRatedMoviesModel() }
         scoped <MvpUpcomingMovies.Model> { UpcomingMoviesModel() }
 
-        scoped <MvpPopularMovies.Presenter> { PopularMoviesPresenter(get()) }
-        scoped <MvpTopRatedMovies.Presenter> { TopRatedMoviesPresenter(get()) }
-        scoped <MvpUpcomingMovies.Presenter> { UpcomingMoviesPresenter(get()) }
+        scoped <MvpPopularMovies.Presenter> { PopularMoviesPresenter(get(), get()) }
+        scoped <MvpTopRatedMovies.Presenter> { TopRatedMoviesPresenter(get(), get()) }
+        scoped <MvpUpcomingMovies.Presenter> { UpcomingMoviesPresenter(get(), get()) }
 
-        scoped <MvpMovies.Presenter> { MoviesPresenter(get(), get(), get(), get()) }
+        scoped <MvpMovies.Presenter> { MoviesPresenter(get(), get(), get(), get(), get()) }
     }
 }
 
 val movieDetailModule = module {
     factory <MvpMovieDetail.Model> { MovieDetailModel() }
-    factory <MvpMovieDetail.Presenter> { MovieDetailPresenter(get()) }
+    factory <MvpMovieDetail.Presenter> { MovieDetailPresenter(get(), get()) }
 }
