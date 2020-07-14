@@ -4,29 +4,36 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewParent
 import android.widget.Toast
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
 import com.te0tl.commons.platform.extension.android.closeKeyboard
 import com.te0tl.commons.platform.extension.android.showAlertDialog
 import com.te0tl.commons.platform.extension.android.showToast
 import com.te0tl.commons.presentation.BaseView
 import com.te0tl.themoviesdb.R
+import com.te0tl.themoviesdb.databinding.FragmentMoviesBinding
+import com.te0tl.themoviesdb.presentation.movies.MoviesAdapter
 
 /**
  * Base fragment to avoid boilerplate code for most of the fragments.
  */
-abstract class BaseFragment : Fragment(), BaseView {
+abstract class BaseFragment<VB: ViewBinding> : Fragment(), BaseView {
+    protected lateinit var viewBinding: VB
 
-    override val standardViewCreation = true
+    abstract fun getViewBinding(parent: ViewGroup): VB
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (standardViewCreation) {
-            return inflater.inflate(idViewResource, container, false)
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        viewBinding = getViewBinding(container!!);
 
-        return super.onCreateView(inflater, container, savedInstanceState)
+        return viewBinding.root
     }
 
     @CallSuper

@@ -9,10 +9,12 @@ import com.te0tl.themoviesdb.presentation.movies.MoviesHomeActivity
 import org.jetbrains.anko.intentFor
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SplashActivity : BaseViewModelActivity<SplashState, SplashViewModel>() {
+class SplashActivity : BaseViewModelActivity<Nothing, SplashState, SplashViewModel>() {
 
-    override val standardViewCreation = false
-    override val idViewResource = -1
+    @Suppress("IMPLICIT_NOTHING_AS_TYPE_PARAMETER")
+    override val viewBinding: Nothing by lazy { throw IllegalArgumentException() }
+
+    override val standardViewBinding = false
 
     override val viewModel: SplashViewModel by viewModel()
 

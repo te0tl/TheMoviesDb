@@ -3,12 +3,13 @@ package com.te0tl.commons.presentation.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
+import androidx.viewbinding.ViewBinding
 import com.te0tl.commons.presentation.viewmodel.BaseViewModel
 
 /**
  * Base fragment to avoid boilerplate code for fragments with ViewModel
  */
-abstract class BaseViewModelFragment<VMS, VM : BaseViewModel<VMS>> : BaseFragment() {
+abstract class BaseViewModelFragment<VB: ViewBinding, VMS, VM : BaseViewModel<VMS>> : BaseFragment<VB>() {
 
     protected abstract val viewModel: VM
 

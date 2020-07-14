@@ -1,48 +1,46 @@
 package com.te0tl.themoviesdb.presentation.movies
 
-import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.widget.SearchView
+import androidx.core.os.bundleOf
 import com.te0tl.commons.platform.extension.android.toggleFragment
 import com.te0tl.commons.presentation.activity.BaseActivity
 import com.te0tl.themoviesdb.R
-import com.te0tl.themoviesdb.domain.entities.Category
+import com.te0tl.themoviesdb.databinding.ActivityHomeMoviesBinding
+import com.te0tl.themoviesdb.domain.entity.Category
 import kotlinx.android.synthetic.main.activity_home_movies.*
 
-class MoviesHomeActivity : BaseActivity() {
+class MoviesHomeActivity : BaseActivity<ActivityHomeMoviesBinding>() {
 
-    override val idViewResource = R.layout.activity_home_movies
+    override val viewBinding: ActivityHomeMoviesBinding by lazy {
+        ActivityHomeMoviesBinding.inflate(layoutInflater)
+    }
 
     override var showBackButton = false
 
-    private lateinit var currentFragment: MoviesListFragment
+    private lateinit var currentFragment: MoviesFragment
 
-    private val popularMoviesFragment: MoviesListFragment by lazy {
-        MoviesListFragment().apply {
-            arguments = Bundle().apply {
-                putSerializable(ARGUMENT_KEY_CATEGORY, Category.POPULAR)
-            }
+    private val popularMoviesFragment: MoviesFragment by lazy {
+        MoviesFragment().apply {
+            arguments = bundleOf(ARGUMENT_KEY_CATEGORY to Category.POPULAR)
         }
     }
 
-    private val topRatedMoviesFragment: MoviesListFragment by lazy {
-        MoviesListFragment().apply {
-            arguments = Bundle().apply {
-                putSerializable(ARGUMENT_KEY_CATEGORY, Category.TOP_RATED)
-            }
+    private val topRatedMoviesFragment: MoviesFragment by lazy {
+        MoviesFragment().apply {
+            arguments = bundleOf(ARGUMENT_KEY_CATEGORY to Category.TOP_RATED)
         }
     }
 
-    private val upcomingMoviesFragment: MoviesListFragment by lazy {
-        MoviesListFragment().apply {
-            arguments = Bundle().apply {
-                putSerializable(ARGUMENT_KEY_CATEGORY, Category.INCOMING)
-            }
+    private val upcomingMoviesFragment: MoviesFragment by lazy {
+        MoviesFragment().apply {
+            arguments = bundleOf(ARGUMENT_KEY_CATEGORY to Category.UPCOMING)
         }
     }
 
     override fun onViewAndExtrasReady() {
         setupNavigation()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -55,7 +53,10 @@ class MoviesHomeActivity : BaseActivity() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(newText: String): Boolean {
-                currentFragment.onQuerySubmit(newText)
+                supportFragmentManager.setFragmentResult(
+                    RESULT_QUERY_KEY,
+                    bundleOf(ARGUMENT_QUERY_KEY to newText)
+                )
                 return false
             }
 
@@ -106,4 +107,5 @@ class MoviesHomeActivity : BaseActivity() {
         }
         bottomNavigationView.selectedItemId = R.id.navigation_popular
     }
+
 }

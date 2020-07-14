@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.viewbinding.ViewBinding
 import com.te0tl.commons.platform.extension.android.closeKeyboard
 import com.te0tl.commons.platform.extension.android.showAlertDialog
 import com.te0tl.commons.platform.extension.android.showToast
@@ -20,18 +21,18 @@ import java.util.concurrent.TimeUnit
  * Base activity to avoid boilerplate code for most of the activities.
  */
 @SuppressLint("Registered")
-abstract class BaseActivity : AppCompatActivity(), BaseView {
+abstract class BaseActivity<VB: ViewBinding> : AppCompatActivity(), BaseView {
+    abstract val viewBinding: VB
 
-    override val standardViewCreation = true
+    protected open val standardViewBinding = true
     protected open var showBackButton = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         parseArguments()
 
-        if (standardViewCreation) {
-            setContentView(idViewResource)
-        }
+        if (standardViewBinding)
+            setContentView(viewBinding.root)
 
         setupToolbar()
         setupFragmentManager()

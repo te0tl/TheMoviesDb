@@ -1,24 +1,26 @@
 package com.te0tl.commons.presentation.view
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.te0tl.commons.platform.extension.android.inflate
 import kotlinx.android.extensions.LayoutContainer
 import kotlin.properties.Delegates
 
-abstract class BaseRecyclerViewAdapter<M>(private val searchable : Boolean = false) : RecyclerView.Adapter<BaseRecyclerViewAdapter<M>.ViewHolder<M>>() {
+/**
+ * Base class to avoid a lot of boiler plate code for common Recyclers.
+ * VB: View Binding Instance.
+ * M: Model to bind data with the View Holder.
+ */
+abstract class BaseRecyclerViewAdapter<VB : ViewBinding, M>(private val searchable: Boolean = false) :
+    RecyclerView.Adapter<BaseRecyclerViewAdapter<VB, M>.ViewHolder<M>>() {
 
-    abstract val itemResourceId : Int
-
-    abstract val bindData: (holder: ViewHolder<M>, model: M) -> Unit
-
-    abstract val areItemsTheSame : (itemOne : M, itemTwo: M) -> Boolean
-
-
-    var itemClickListener : ItemClickListener<M>? = null
+    var itemClickListener: ItemClickListener<M>? = null
 
     var items: List<M> by Delegates.observable(emptyList()) { _, oldList, newList ->
         autoNotify(oldList, newList)
@@ -27,7 +29,7 @@ abstract class BaseRecyclerViewAdapter<M>(private val searchable : Boolean = fal
     private var itemsOriginals = emptyList<M>()
     private var itemsFiltered = emptyList<M>()
 
-    private var searchFilter : Filter? = null
+    private var searchFilter: Filter? = null
     private var lastQuery = ""
 
     init {
@@ -36,6 +38,22 @@ abstract class BaseRecyclerViewAdapter<M>(private val searchable : Boolean = fal
             itemsOriginals = items.toMutableList()
             setupSearch()
         }
+    }
+
+    abstract fun instantiateViewBinding(parent: ViewGroup): VB
+
+    abstract fun bindData(viewBinding: VB, model: M)
+
+    abstract fun equals(model: M, otherModel: M): Boolean
+
+    override fun getItemCount() = items.size
+
+    override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder<M> {
+        return ViewHolder(instantiateViewBinding(parent))
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder<M>, position: Int) {
+        bindData(holder.viewBinding, items[position])
     }
 
     fun clearItems() {
@@ -48,7 +66,7 @@ abstract class BaseRecyclerViewAdapter<M>(private val searchable : Boolean = fal
         }
     }
 
-    fun updateItems(items : List<M>) {
+    fun updateItems(items: List<M>) {
         if (searchable) {
             this.itemsOriginals = items.toMutableList()
             performSearch(lastQuery)
@@ -57,7 +75,7 @@ abstract class BaseRecyclerViewAdapter<M>(private val searchable : Boolean = fal
         }
     }
 
-    fun addItem(item : M) {
+    fun addItem(item: M) {
         if (searchable) {
             this.itemsOriginals = this.itemsOriginals.toMutableList().apply { add(item) }
             performSearch(lastQuery)
@@ -66,7 +84,7 @@ abstract class BaseRecyclerViewAdapter<M>(private val searchable : Boolean = fal
         }
     }
 
-    fun addItem(index : Int, item : M) {
+    fun addItem(index: Int, item: M) {
         if (searchable) {
             this.itemsOriginals = this.itemsOriginals.toMutableList().apply { add(index, item) }
             performSearch(lastQuery)
@@ -75,42 +93,29 @@ abstract class BaseRecyclerViewAdapter<M>(private val searchable : Boolean = fal
         }
     }
 
-    fun performSearch(query : String) {
+    fun performSearch(query: String) {
         lastQuery = query
         searchFilter?.filter(lastQuery)
     }
 
-    override fun getItemCount() = items.size
-
-    override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder<M> {
-        return ViewHolder(parent.inflate(itemResourceId))
+    interface ItemClickListener<M> {
+        fun onItemClick(item: M)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder<M>, position: Int) {
-        holder.bindData(holder, items[position], bindData)
-    }
-
-    inner class ViewHolder<M>(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    inner class ViewHolder<M>(val viewBinding: VB) :
+        RecyclerView.ViewHolder(viewBinding.root) {
         init {
             itemView.setOnClickListener {
                 itemClickListener?.onItemClick(items[layoutPosition])
             }
         }
-
-        fun bindData(viewHolder : ViewHolder<M>, model : M, bindDataCode: (viewHolder : ViewHolder<M>, model: M) -> Unit) {
-            bindDataCode(viewHolder, model)
-        }
-    }
-
-    interface ItemClickListener<M> {
-        fun onItemClick(item : M)
     }
 
     private fun RecyclerView.Adapter<*>.autoNotify(oldList: List<M>, newList: List<M>) {
         val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
 
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return areItemsTheSame(oldList[oldItemPosition], newList[newItemPosition])
+                return equals(oldList[oldItemPosition], newList[newItemPosition])
             }
 
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
@@ -129,11 +134,13 @@ abstract class BaseRecyclerViewAdapter<M>(private val searchable : Boolean = fal
         searchFilter = object : Filter() {
             override fun performFiltering(filter: CharSequence): FilterResults {
                 val filteredLocalList =
-                if (filter.toString().isEmpty()) {
-                    itemsOriginals
-                } else {
-                    itemsOriginals.filter { it.toString().toLowerCase().contains(filter.toString().toLowerCase()) }
-                }
+                    if (filter.toString().isEmpty()) {
+                        itemsOriginals
+                    } else {
+                        itemsOriginals.filter {
+                            it.toString().toLowerCase().contains(filter.toString().toLowerCase())
+                        }
+                    }
                 val filterResults = FilterResults()
                 filterResults.values = filteredLocalList
                 return filterResults

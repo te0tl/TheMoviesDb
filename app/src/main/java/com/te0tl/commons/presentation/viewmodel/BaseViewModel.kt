@@ -1,9 +1,6 @@
 package com.te0tl.commons.presentation.viewmodel
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -14,14 +11,9 @@ abstract class BaseViewModel<VS> : ViewModel() {
 
     private val innersObservers = mutableListOf<Observer<VS>>()
 
-    protected val currentState : VS? get() = viewStateLiveData.value
+    private val currentState : VS? get() = viewStateLiveData.value
 
-    private val viewModelJob = SupervisorJob()
-
-    protected val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-
-    //TODO CHECK IF NECESSARY
-    protected open fun initialLoad() { }
+    protected val uiScope = viewModelScope
 
     override fun onCleared() {
         super.onCleared()
@@ -29,9 +21,6 @@ abstract class BaseViewModel<VS> : ViewModel() {
         innersObservers.forEach {
             viewStateLiveData.removeObserver(it)
         }
-
-        viewModelJob.cancel()
-
     }
 
     protected fun updateViewModelState(newState: VS?, post: Boolean = true) {

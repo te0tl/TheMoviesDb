@@ -7,22 +7,23 @@ import com.orhanobut.logger.PrettyFormatStrategy
 import com.te0tl.themoviesdb.BuildConfig
 import timber.log.Timber
 import java.lang.StringBuilder
+import java.util.*
 
 object Logger {
 
-    fun e(exception: Exception, message: String, vararg value: Pair<String, Any>) {
+    fun e(exception: Throwable, message: String, vararg value: Pair<String, Any>) {
         Timber.e(exception, message, *value)
     }
 
-    fun e(exception: Exception) {
+    fun e(exception: Throwable) {
         Timber.e(exception)
     }
 
-    fun i(message: String) {
-        Timber.i(message)
+    fun i(message: String, vararg objects: Any) {
+        Timber.i(message, objects)
     }
 
-    fun i(exception: Exception) {
+    fun i(exception: Throwable) {
         Timber.i(exception)
     }
 
@@ -30,7 +31,7 @@ object Logger {
         Timber.d(message)
     }
 
-    fun d(exception: Exception) {
+    fun d(exception: Throwable) {
         Timber.d(exception)
     }
 
@@ -76,7 +77,7 @@ object Logger {
                         val pair = it as Pair<String, *>
                         builder.append("\n${pair.first} ${pair.second}")
                     }
-                } catch (e: Exception) {
+                } catch (e: Throwable) {
                 }
 
                 rawMessage = message.plus(builder.toString()).plus("\n")

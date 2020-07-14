@@ -5,4 +5,7 @@
     <string name="global_warning">Aviso</string>
     <string name="global_ok" tools:ignore="ExtraTranslation">OK</string>
     <string name="global_error">Error</string>
+
+    <string name="no_network_error">No hay conexión a internet</string>
+
 </resources>
