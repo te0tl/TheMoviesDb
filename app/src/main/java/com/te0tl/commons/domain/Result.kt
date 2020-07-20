@@ -1,4 +1,5 @@
 package com.te0tl.commons.domain
+import kotlinx.coroutines.Dispatchers
 
 sealed class Result<out D, out E> {
     data class Success<out D>(val data: D): Result<D, Nothing>()

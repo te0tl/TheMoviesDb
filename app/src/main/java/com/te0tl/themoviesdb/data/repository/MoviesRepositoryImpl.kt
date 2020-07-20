@@ -11,10 +11,9 @@ import com.te0tl.themoviesdb.data.api.dto.Mapper
 import com.te0tl.themoviesdb.domain.entity.Category
 import com.te0tl.themoviesdb.domain.entity.Movie
 import com.te0tl.themoviesdb.domain.entity.MovieDetail
-import com.te0tl.themoviesdb.domain.entity.Video
+import com.te0tl.themoviesdb.domain.entity.YoutubeVideo
 import com.te0tl.themoviesdb.domain.repository.MoviesRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
@@ -23,7 +22,8 @@ import java.lang.Exception
  */
 private const val cacheTime = 60_0000L
 
-class MoviesRepositoryImpl(private val context: Context, private val tmdbApi: TmdbApi) : MoviesRepository {
+class MoviesRepositoryImpl(private val context: Context, private val tmdbApi: TmdbApi) :
+    MoviesRepository {
 
     private val memoryMoviesCache by lazy {
         mutableMapOf<Category, Triple<MutableList<Movie>, Long, Int>>()
@@ -33,30 +33,30 @@ class MoviesRepositoryImpl(private val context: Context, private val tmdbApi: Tm
         mutableMapOf<Int, Pair<MovieDetail, Long>>()
     }
 
-    private val memoryMoviesDetailsVideosCache by lazy {
-        mutableMapOf<Int, Pair<List<Video>, Long>>()
-    }
-
     override suspend fun getMovies(category: Category, page: Int): Result<List<Movie>, String> =
         withContext(Dispatchers.IO) {
             try {
                 when {
-                    !context.hasNetworkConnection() -> {
-                        Result.Failure(context.getString(R.string.no_network_error))
-                    }
-
                     !isCacheMoviesExpired(category, page) -> {
                         Result.Success(memoryMoviesCache[category]!!.first)
                     }
 
                     else -> {
-                        Result.Success(tmdbApi.getMovies(Mapper.toCategoryDto(category), page).movies
-                            .map {
-                                Movie(
-                                    it.id, it.title, it.overview, it.releaseDate,
-                                    BASE_URL_IMAGES + "w400/" + it.pathUrl
-                                )
-                            })
+                        if (!context.hasNetworkConnection()) {
+                            Result.Failure(context.getString(R.string.no_network_error))
+                        } else {
+                            Result.Success(tmdbApi.getMovies(
+                                Mapper.toCategoryDto(category),
+                                page
+                            ).movies
+                                .map {
+                                    Movie(
+                                        it.id, it.title, it.overview, it.releaseDate,
+                                        BASE_URL_IMAGES + "w400/" + it.pathUrl
+                                    )
+                                })
+                        }
+
                     }
                 }
 
@@ -66,22 +66,75 @@ class MoviesRepositoryImpl(private val context: Context, private val tmdbApi: Tm
 
         }
 
-    override suspend fun getMovie(category: Category, id: Int): Result<Movie, String> {
-        TODO("Not yet implemented")
+    override suspend fun getMovieDetail(id: Int): Result<MovieDetail, String> =
+        withContext(Dispatchers.IO) {
+            try {
+                when {
+                    !isCacheMovieExpired(id) && memoryMoviesDetailsCache[id]?.first != null -> {
+                        Result.Success(memoryMoviesDetailsCache[id]?.first!!)
+                    }
+
+                    else -> {
+
+                        if (!context.hasNetworkConnection()) {
+                            Result.Failure(context.getString(R.string.no_network_error))
+                        } else {
+                            val movieRepo = tmdbApi.getMovie(id)
+                            val movies =
+                                when (val videosYoutube = getMovieYoutubeVideos(id)) {
+                                    is Result.Success -> {
+                                        videosYoutube.data
+                                    }
+                                    else -> {
+                                        emptyList<YoutubeVideo>()
+                                    }
+                                }
+
+                            val movieDetail = MovieDetail(
+                                movieRepo.id,
+                                movieRepo.title,
+                                movieRepo.originalTitle,
+                                movieRepo.overview,
+                                movieRepo.releaseDate,
+                                BASE_URL_IMAGES + "w400/" + movieRepo.pathUrl,
+                                movieRepo.homePage ?: "",
+                                movies
+                            )
+                            memoryMoviesDetailsCache[id] = movieDetail to System.currentTimeMillis()
+                            Result.Success(movieDetail)
+                        }
+
+                    }
+                }
+
+            } catch (e: Exception) {
+                Result.Failure(e.safeMessage)
+            }
+        }
+
+    suspend fun getMovieYoutubeVideos(
+        id: Int
+    ): Result<List<YoutubeVideo>, String> = withContext(Dispatchers.IO) {
+        try {
+            if (!context.hasNetworkConnection()) {
+                Result.Failure(context.getString(R.string.no_network_error))
+            } else {
+                Result.Success(tmdbApi.getVideos(id).videos
+                    .filter { it.site.equals("YouTube") }
+                    .map {
+                        YoutubeVideo(it.key, it.name)
+                    })
+            }
+        } catch (e: Exception) {
+            Result.Failure(e.safeMessage)
+        }
     }
 
-    override suspend fun getMovieDetail(id: Int, category: Category): Result<MovieDetail, String> {
-        TODO("Not yet implemented")
-    }
 
-    override suspend fun getMovieVideos(id: Int, category: Category): Result<List<Video>, String> {
-        TODO("Not yet implemented")
-    }
-
-
-    private fun isCacheMoviesExpired(category: Category, page : Int) : Boolean {
+    private fun isCacheMoviesExpired(category: Category, page: Int): Boolean {
         return if (memoryMoviesCache[category] != null
-            && memoryMoviesCache[category]?.third == page) {
+            && memoryMoviesCache[category]?.third == page
+        ) {
             val currentTimestamp = System.currentTimeMillis()
             val moviesTimestamp = memoryMoviesCache[category]!!.second
             currentTimestamp - moviesTimestamp > cacheTime
@@ -90,20 +143,10 @@ class MoviesRepositoryImpl(private val context: Context, private val tmdbApi: Tm
         }
     }
 
-    private fun isCacheMovieExpired(id: Int) : Boolean {
+    private fun isCacheMovieExpired(id: Int): Boolean {
         return if (memoryMoviesDetailsCache[id] != null) {
             val currentTimestamp = System.currentTimeMillis()
             val moviesTimestamp = memoryMoviesDetailsCache[id]!!.second
-            currentTimestamp - moviesTimestamp > cacheTime
-        } else {
-            true
-        }
-    }
-
-    private fun isCacheMovieVideosExpired(id: Int) : Boolean {
-        return if (memoryMoviesDetailsVideosCache[id] != null) {
-            val currentTimestamp = System.currentTimeMillis()
-            val moviesTimestamp = memoryMoviesDetailsVideosCache[id]!!.second
             currentTimestamp - moviesTimestamp > cacheTime
         } else {
             true

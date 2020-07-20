@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">The Movies DB</string>
+    <string name="app_name">TMDB MVVM</string>
     <string name="menu_popular">Popular</string>
     <string name="menu_top_rated">Top Rated</string>
     <string name="menu_upcoming">Upcoming</string>

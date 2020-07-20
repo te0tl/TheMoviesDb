@@ -7,8 +7,9 @@ data class MovieDetail(
     val title: String,
     val originalTitle: String,
     val overview: String,
-    val releaseDate: Date,
+    val releaseDate: String,
     var backdropUrl: String,
-    val homePage: String?
+    val homePage: String?,
+    val youtubeVideos: List<YoutubeVideo>
 )
 

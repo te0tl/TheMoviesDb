@@ -26,9 +26,13 @@
         </activity>
 
         <activity
-                android:label="@string/app_name"
-                android:name=".presentation.movies.MoviesHomeActivity"
-                android:configChanges="keyboardHidden|orientation|screenSize" />
+                android:name=".presentation.movies.MoviesActivity"
+                android:configChanges="keyboardHidden|orientation|screenSize"
+                android:windowSoftInputMode="adjustPan"/>
+
+        <activity
+                android:name=".presentation.movie.MovieActivity"
+                android:configChanges="keyboardHidden|orientation|screenSize"/>
 
     </application>
 

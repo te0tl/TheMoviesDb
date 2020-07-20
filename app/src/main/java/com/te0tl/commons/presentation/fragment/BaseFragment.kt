@@ -1,6 +1,8 @@
 package com.te0tl.commons.presentation.fragment
 
+import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,12 +19,15 @@ import com.te0tl.commons.presentation.BaseView
 import com.te0tl.themoviesdb.R
 import com.te0tl.themoviesdb.databinding.FragmentMoviesBinding
 import com.te0tl.themoviesdb.presentation.movies.MoviesAdapter
+import java.util.concurrent.TimeUnit
 
 /**
  * Base fragment to avoid boilerplate code for most of the fragments.
  */
-abstract class BaseFragment<VB: ViewBinding> : Fragment(), BaseView {
-    protected lateinit var viewBinding: VB
+abstract class BaseFragment<VB : ViewBinding> : Fragment(), BaseView<VB> {
+    override lateinit var stringProvider: Context
+
+    override lateinit var viewBinding: VB
 
     abstract fun getViewBinding(parent: ViewGroup): VB
 
@@ -31,7 +36,8 @@ abstract class BaseFragment<VB: ViewBinding> : Fragment(), BaseView {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewBinding = getViewBinding(container!!);
+        stringProvider = context!!
+        viewBinding = getViewBinding(container!!)
 
         return viewBinding.root
     }
@@ -39,37 +45,39 @@ abstract class BaseFragment<VB: ViewBinding> : Fragment(), BaseView {
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        parseArguments()
+        parseArguments(arguments)
         onViewAndExtrasReady()
     }
 
-    protected fun showDialog(message : String, title : String = getString(R.string.global_warning)) {
+    override fun showDialog(message: String, title: String) {
         activity?.showAlertDialog(title, message)
     }
 
-    protected fun showShortToast(message : String) {
+    override fun showShortToast(message: String) {
         activity?.showToast(message)
     }
 
-    protected fun showLongToast(message : String) {
+    override fun showLongToast(message: String) {
         activity?.showToast(message, Toast.LENGTH_LONG)
     }
 
-    protected fun showDialogConfirm(message: String, title: String = getString(R.string.global_warning),
-                                    listener: (confirmed: Boolean) -> Unit) {
+    override fun showDialogConfirm(
+        message: String, title: String,
+        listener: (confirmed: Boolean) -> Unit
+    ) {
         activity?.closeKeyboard(activity?.currentFocus)
 
         AlertDialog.Builder(context!!)
-                .setTitle(title)
-                .setMessage(message)
-                .setNegativeButton(getString(R.string.global_cancel)) { _, _ ->
-                    listener(false)
+            .setTitle(title)
+            .setMessage(message)
+            .setNegativeButton(getString(R.string.global_cancel)) { _, _ ->
+                listener(false)
 
-                }
-                .setPositiveButton(getString(R.string.global_yes)) { _, _ ->
-                    listener(true)
-                }
-                .create().show()
+            }
+            .setPositiveButton(getString(R.string.global_yes)) { _, _ ->
+                listener(true)
+            }
+            .create().show()
 
     }
 

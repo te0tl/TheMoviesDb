@@ -4,16 +4,12 @@ import com.te0tl.commons.domain.Result
 import com.te0tl.themoviesdb.domain.entity.Category
 import com.te0tl.themoviesdb.domain.entity.Movie
 import com.te0tl.themoviesdb.domain.entity.MovieDetail
-import com.te0tl.themoviesdb.domain.entity.Video
+import com.te0tl.themoviesdb.domain.entity.YoutubeVideo
 
 interface MoviesRepository {
 
     suspend fun getMovies(category: Category, page: Int) : Result<List<Movie>, String>
 
-    suspend fun getMovie(category: Category, id: Int): Result<Movie, String>
-
-    suspend fun getMovieDetail(id: Int, category: Category): Result<MovieDetail, String>
-
-    suspend fun getMovieVideos(id: Int, category: Category): Result<List<Video>, String>
+    suspend fun getMovieDetail(id: Int): Result<MovieDetail, String>
 
 }

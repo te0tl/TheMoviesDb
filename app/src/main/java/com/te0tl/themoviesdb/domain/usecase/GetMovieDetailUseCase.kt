@@ -6,23 +6,20 @@ import com.te0tl.commons.domain.Result
 import com.te0tl.commons.platform.extension.safeMessage
 import com.te0tl.themoviesdb.domain.entity.Category
 import com.te0tl.themoviesdb.domain.entity.Movie
+import com.te0tl.themoviesdb.domain.entity.MovieDetail
 import com.te0tl.themoviesdb.domain.repository.MoviesRepository
 import com.te0tl.themoviesdb.platform.logging.Logger
 import kotlinx.coroutines.delay
 
-class GetMoviesUseCase(private val moviesRepository: MoviesRepository) :
-    BaseUseCaseWithParam<Category, List<Movie>, String>() {
+class GetMovieDetailUseCase(private val moviesRepository: MoviesRepository) :
+    BaseUseCaseWithParam<Int, MovieDetail, String>() {
 
-    private var currentPage = 0
 
-    override suspend fun execute(param: Category): Result<List<Movie>, String> {
+    override suspend fun execute(param: Int): Result<MovieDetail, String> {
         return try {
-            currentPage++
-            val copyOfCurrentPage = currentPage
 
-            when (val result = moviesRepository.getMovies(param, currentPage)) {
+            when (val result = moviesRepository.getMovieDetail(param)) {
                 is Result.Success -> {
-                    Logger.i("success $copyOfCurrentPage")
                     Result.Success(result.data)
                 }
 

@@ -9,6 +9,7 @@ import com.te0tl.commons.presentation.view.BaseRecyclerViewAdapter
 import com.te0tl.themoviesdb.R
 import com.te0tl.themoviesdb.databinding.RecyclerviewMovieItemBinding
 import com.te0tl.themoviesdb.domain.entity.Movie
+import com.te0tl.themoviesdb.platform.logging.Logger
 import kotlinx.android.synthetic.main.recyclerview_movie_item.*
 
 class MoviesAdapter : BaseRecyclerViewAdapter<RecyclerviewMovieItemBinding, Movie>(true) {
@@ -20,10 +21,9 @@ class MoviesAdapter : BaseRecyclerViewAdapter<RecyclerviewMovieItemBinding, Movi
             false
         )
 
-    override fun bindData(viewBinding: RecyclerviewMovieItemBinding, model: Movie) {
+    override fun bindData(viewBinding: RecyclerviewMovieItemBinding, model: Movie, position: Int) {
         with(viewBinding) {
-            txtViewTitle.text = model.title
-            txtViewTitle.text = model.title
+            txtViewTitle.text = model.title + " " +  position
             txtViewOverview.text = model.overview
             txtViewDate.text = model.releaseDate
             imageViewPoster.loadFromUrl(model.posterUrl)

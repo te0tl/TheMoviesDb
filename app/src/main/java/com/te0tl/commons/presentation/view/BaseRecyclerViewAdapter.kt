@@ -13,6 +13,7 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlin.properties.Delegates
 
 /**
+ *
  * Base class to avoid a lot of boiler plate code for common Recyclers.
  * VB: View Binding Instance.
  * M: Model to bind data with the View Holder.
@@ -42,7 +43,7 @@ abstract class BaseRecyclerViewAdapter<VB : ViewBinding, M>(private val searchab
 
     abstract fun instantiateViewBinding(parent: ViewGroup): VB
 
-    abstract fun bindData(viewBinding: VB, model: M)
+    abstract fun bindData(viewBinding: VB, model: M, position: Int)
 
     abstract fun equals(model: M, otherModel: M): Boolean
 
@@ -53,7 +54,7 @@ abstract class BaseRecyclerViewAdapter<VB : ViewBinding, M>(private val searchab
     }
 
     override fun onBindViewHolder(holder: ViewHolder<M>, position: Int) {
-        bindData(holder.viewBinding, items[position])
+        bindData(holder.viewBinding, items[position], position)
     }
 
     fun clearItems() {
@@ -66,12 +67,15 @@ abstract class BaseRecyclerViewAdapter<VB : ViewBinding, M>(private val searchab
         }
     }
 
-    fun updateItems(items: List<M>) {
+    fun addItems(items: List<M>) {
+        val newList = this.items.toMutableList()
+        newList.addAll(items.toMutableList())
+
         if (searchable) {
-            this.itemsOriginals = items.toMutableList()
+            this.itemsOriginals = newList
             performSearch(lastQuery)
         } else {
-            this.items = items.toMutableList()
+            this.items = this.items.toMutableList()
         }
     }
 

@@ -5,7 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import com.te0tl.commons.presentation.activity.BaseViewModelActivity
-import com.te0tl.themoviesdb.presentation.movies.MoviesHomeActivity
+import com.te0tl.themoviesdb.presentation.movies.MoviesActivity
 import org.jetbrains.anko.intentFor
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -36,7 +36,7 @@ class SplashActivity : BaseViewModelActivity<Nothing, SplashState, SplashViewMod
 
     private fun goToMovies() {
         finish()
-        startActivity(intentFor<MoviesHomeActivity>())
+        startActivity(intentFor<MoviesActivity>())
     }
 
 }

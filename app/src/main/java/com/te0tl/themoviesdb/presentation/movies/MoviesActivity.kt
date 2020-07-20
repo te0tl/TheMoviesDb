@@ -6,14 +6,17 @@ import androidx.core.os.bundleOf
 import com.te0tl.commons.platform.extension.android.toggleFragment
 import com.te0tl.commons.presentation.activity.BaseActivity
 import com.te0tl.themoviesdb.R
-import com.te0tl.themoviesdb.databinding.ActivityHomeMoviesBinding
+import com.te0tl.themoviesdb.databinding.ActivityMoviesBinding
 import com.te0tl.themoviesdb.domain.entity.Category
-import kotlinx.android.synthetic.main.activity_home_movies.*
+import com.te0tl.themoviesdb.domain.entity.Movie
+import com.te0tl.themoviesdb.presentation.movie.*
+import kotlinx.android.synthetic.main.activity_movies.*
+import org.jetbrains.anko.intentFor
 
-class MoviesHomeActivity : BaseActivity<ActivityHomeMoviesBinding>() {
+class MoviesActivity : BaseActivity<ActivityMoviesBinding>() {
 
-    override val viewBinding: ActivityHomeMoviesBinding by lazy {
-        ActivityHomeMoviesBinding.inflate(layoutInflater)
+    override val viewBinding: ActivityMoviesBinding by lazy {
+        ActivityMoviesBinding.inflate(layoutInflater)
     }
 
     override var showBackButton = false
@@ -106,6 +109,17 @@ class MoviesHomeActivity : BaseActivity<ActivityHomeMoviesBinding>() {
             true
         }
         bottomNavigationView.selectedItemId = R.id.navigation_popular
+    }
+
+    fun intentToDetailMovie(movie: Movie, category: Category) {
+        startActivity(
+            intentFor<MovieActivity>(
+                EXTRA_KEY_MOVIE_ID to movie.id,
+                EXTRA_KEY_MOVIE_TITLE to movie.title,
+                EXTRA_KEY_MOVIE_POSTER_URL to movie.posterUrl
+
+            )
+        )
     }
 
 }

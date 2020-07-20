@@ -14,10 +14,11 @@ import kotlinx.coroutines.launch
 class MoviesViewModel(private val context: Context, private val getMoviesUseCase: GetMoviesUseCase) :
     BaseViewModel<MoviesState>() {
 
-    fun getMovies(category: Category) {
+    fun getMovies(category: Category, showLoading: Boolean = true) {
         uiScope.launch {
 
-            updateViewModelState(MoviesState.Loading)
+            if (showLoading)
+                updateViewModelState(MoviesState.Loading)
 
             val result: Result<List<Movie>, String> = getMoviesUseCase(category)
 
@@ -30,6 +31,10 @@ class MoviesViewModel(private val context: Context, private val getMoviesUseCase
             }
 
         }
+    }
+
+    fun getMoreMovies(category: Category) {
+        getMovies(category, false)
     }
 
 }

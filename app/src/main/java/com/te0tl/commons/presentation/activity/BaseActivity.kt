@@ -1,6 +1,7 @@
 package com.te0tl.commons.presentation.activity
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
@@ -21,15 +22,17 @@ import java.util.concurrent.TimeUnit
  * Base activity to avoid boilerplate code for most of the activities.
  */
 @SuppressLint("Registered")
-abstract class BaseActivity<VB: ViewBinding> : AppCompatActivity(), BaseView {
-    abstract val viewBinding: VB
+abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity(), BaseView<VB> {
+    override lateinit var stringProvider: Context
 
     protected open val standardViewBinding = true
     protected open var showBackButton = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        parseArguments()
+        stringProvider = this;
+
+        parseArguments(intent?.extras)
 
         if (standardViewBinding)
             setContentView(viewBinding.root)
@@ -42,7 +45,8 @@ abstract class BaseActivity<VB: ViewBinding> : AppCompatActivity(), BaseView {
         super.onPostCreate(savedInstanceState)
         onViewAndExtrasReady()
     }
-    protected fun getToolbar() : Toolbar {
+
+    protected fun getToolbar(): Toolbar {
         return toolbar
     }
 
@@ -72,36 +76,36 @@ abstract class BaseActivity<VB: ViewBinding> : AppCompatActivity(), BaseView {
         return super.onOptionsItemSelected(item)
     }
 
-    protected fun showDialog(message: String, title: String = getString(R.string.global_warning)) {
+    override fun showDialog(message: String, title: String) {
         showAlertDialog(title, message)
     }
 
-    protected fun showDialogConfirm(message: String, title: String = getString(R.string.global_warning),
-                                    listener: (confirmed: Boolean) -> Unit) {
-        closeKeyboard(currentFocus)
-
-        AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setNegativeButton(getString(R.string.global_cancel)) { _, _ ->
-                    listener(false)
-
-                }
-                .setPositiveButton(getString(R.string.global_yes)) { _, _ ->
-                    listener(true)
-                }
-                .create().show()
-    }
-
-    protected fun showShortToast(message: String) {
+    override fun showShortToast(message: String) {
         showToast(message)
     }
 
-    protected fun showLongToast(message: String) {
+    override fun showLongToast(message: String) {
         showToast(message, Toast.LENGTH_LONG)
     }
 
-    protected fun postDelayed(seconds : Int, block : () -> Unit) {
-        Handler().postDelayed(Runnable(block), TimeUnit.SECONDS.toMillis(seconds.toLong()))
+    override fun showDialogConfirm(
+        message: String, title: String,
+        listener: (confirmed: Boolean) -> Unit
+    ) {
+        closeKeyboard(currentFocus)
+
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setNegativeButton(getString(R.string.global_cancel)) { _, _ ->
+                listener(false)
+
+            }
+            .setPositiveButton(getString(R.string.global_yes)) { _, _ ->
+                listener(true)
+            }
+            .create().show()
     }
+
+
 }

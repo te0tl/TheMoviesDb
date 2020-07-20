@@ -8,11 +8,15 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 
 class RecyclerViewLinear : RecyclerView {
-    private val dividerItemDecoration : DividerItemDecoration
+    private val dividerItemDecoration: DividerItemDecoration
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
+    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(
+        context,
+        attrs,
+        defStyle
+    )
 
     init {
 
