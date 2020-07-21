@@ -2,21 +2,19 @@ package com.te0tl.themoviesdb.presentation.movies
 
 import android.os.Bundle
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentResultListener
-import com.te0tl.commons.platform.extension.android.hide
+import androidx.core.os.bundleOf
+import com.te0tl.commons.platform.extension.android.sendFragmentResult
 import com.te0tl.commons.platform.extension.android.setFragmentResultListener
-import com.te0tl.commons.platform.extension.android.show
 import com.te0tl.commons.presentation.fragment.BaseViewModelFragment
 import com.te0tl.commons.presentation.view.BaseRecyclerViewAdapter
 import com.te0tl.themoviesdb.databinding.FragmentMoviesBinding
 import com.te0tl.themoviesdb.domain.entity.Category
 import com.te0tl.themoviesdb.domain.entity.Movie
-import com.te0tl.themoviesdb.platform.logging.Logger
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val ARGUMENT_KEY_CATEGORY = "ARGUMENT_KEY_CATEGORY"
-const val RESULT_QUERY_KEY = "RESULT_QUERY_KEY"
-const val ARGUMENT_QUERY_KEY = "ARGUMENT_QUERY_KEY"
+const val EVENT_SEARCH_KEY = "RESULT_SEARCH_KEY"
+const val RESULT_SEARCH_KEY = "RESULT_SEARCH_KEY"
 
 class MoviesFragment :
     BaseViewModelFragment<FragmentMoviesBinding, MoviesState, MoviesViewModel>(),
@@ -44,10 +42,11 @@ class MoviesFragment :
 
     override fun onViewAndExtrasReady() {
         setFragmentResultListener(
-            RESULT_QUERY_KEY,
-            FragmentResultListener { requestKey, result ->
-                onFragmentResult(requestKey, result)
-            })
+            EVENT_SEARCH_KEY,
+            {
+                onNewSearch(it)
+            }
+        )
 
         //disable swipe to refresh
         viewBinding.swipeRefreshLayout.setDistanceToTriggerSync(Int.MAX_VALUE)
@@ -68,21 +67,23 @@ class MoviesFragment :
         with(viewBinding) {
             when (newState) {
                 is MoviesState.MoviesReady -> {
-                    contentContainer.show()
-                    progressContainer.hide()
-                    errorContainer.hide()
                     moviesAdapter.addItems(newState.movies)
+                    sendFragmentResult(
+                        EVENT_KEY_TOOLBAR,
+                        bundleOf(RESULT_KEY_PROGRESS to false, RESULT_KEY_ERROR to "")
+                    )
                 }
                 is MoviesState.Loading -> {
-                    contentContainer.hide()
-                    progressContainer.show()
-                    errorContainer.hide()
+                    sendFragmentResult(
+                        EVENT_KEY_TOOLBAR,
+                        bundleOf(RESULT_KEY_PROGRESS to true, RESULT_KEY_ERROR to "")
+                    )
                 }
                 is MoviesState.Error -> {
-                    contentContainer.hide()
-                    progressContainer.hide()
-                    errorContainer.show()
-                    txtViewError.text = newState.error
+                    sendFragmentResult(
+                        EVENT_KEY_TOOLBAR,
+                        bundleOf(RESULT_KEY_PROGRESS to false, RESULT_KEY_ERROR to newState.error)
+                    )
                 }
             }
         }
@@ -92,10 +93,8 @@ class MoviesFragment :
         (activity as MoviesActivity).intentToDetailMovie(item, category)
     }
 
-    private fun onFragmentResult(requestKey: String, result: Bundle) {
-        check(RESULT_QUERY_KEY == requestKey)
-
-        result.getString(ARGUMENT_QUERY_KEY)?.also {
+    private fun onNewSearch(result: Bundle) {
+        result.getString(RESULT_SEARCH_KEY)?.also {
             moviesAdapter.performSearch(it)
         }
 

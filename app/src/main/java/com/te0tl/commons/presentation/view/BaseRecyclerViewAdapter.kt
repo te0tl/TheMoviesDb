@@ -75,7 +75,7 @@ abstract class BaseRecyclerViewAdapter<VB : ViewBinding, M>(private val searchab
             this.itemsOriginals = newList
             performSearch(lastQuery)
         } else {
-            this.items = this.items.toMutableList()
+            this.items = newList.toMutableList()
         }
     }
 

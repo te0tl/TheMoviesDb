@@ -18,11 +18,8 @@ class GetMoviesUseCase(private val moviesRepository: MoviesRepository) :
     override suspend fun execute(param: Category): Result<List<Movie>, String> {
         return try {
             currentPage++
-            val copyOfCurrentPage = currentPage
-
             when (val result = moviesRepository.getMovies(param, currentPage)) {
                 is Result.Success -> {
-                    Logger.i("success $copyOfCurrentPage")
                     Result.Success(result.data)
                 }
 

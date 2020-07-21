@@ -1,11 +1,12 @@
 package com.te0tl.commons.platform.extension.android
 
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.FragmentTransaction
-import com.te0tl.themoviesdb.presentation.movies.RESULT_QUERY_KEY
 
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
     beginTransaction().func().commit()
@@ -49,10 +50,21 @@ fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int) {
     supportFragmentManager.inTransaction { replace(frameId, fragment) }
 }
 
-fun Fragment.setFragmentResultListener(key: String, resultListener: FragmentResultListener) {
+fun Fragment.setFragmentResultListener(
+    key: String,
+    resultListener: (result: Bundle) -> Unit
+) {
     parentFragmentManager.setFragmentResultListener(
         key,
         this,
-        resultListener
+        FragmentResultListener { _, result ->
+            resultListener(result)
+        }
+    )
+}
+
+fun Fragment.sendFragmentResult(key: String, bundle: Bundle) {
+    parentFragmentManager.setFragmentResult(
+        key, bundle
     )
 }

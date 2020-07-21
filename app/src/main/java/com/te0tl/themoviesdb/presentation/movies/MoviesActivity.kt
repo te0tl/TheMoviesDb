@@ -1,9 +1,10 @@
 package com.te0tl.themoviesdb.presentation.movies
 
+import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
-import com.te0tl.commons.platform.extension.android.toggleFragment
+import com.te0tl.commons.platform.extension.android.*
 import com.te0tl.commons.presentation.activity.BaseActivity
 import com.te0tl.themoviesdb.R
 import com.te0tl.themoviesdb.databinding.ActivityMoviesBinding
@@ -11,7 +12,12 @@ import com.te0tl.themoviesdb.domain.entity.Category
 import com.te0tl.themoviesdb.domain.entity.Movie
 import com.te0tl.themoviesdb.presentation.movie.*
 import kotlinx.android.synthetic.main.activity_movies.*
+import kotlinx.android.synthetic.main.toolbar.view.*
 import org.jetbrains.anko.intentFor
+
+const val EVENT_KEY_TOOLBAR = "EVENT_KEY_TOOLBAR"
+const val RESULT_KEY_PROGRESS = "RESULT_KEY_PROGRESS"
+const val RESULT_KEY_ERROR = "RESULT_KEY_ERROR"
 
 class MoviesActivity : BaseActivity<ActivityMoviesBinding>() {
 
@@ -43,7 +49,11 @@ class MoviesActivity : BaseActivity<ActivityMoviesBinding>() {
 
     override fun onViewAndExtrasReady() {
         setupNavigation()
-
+        setFragmentResultListener(
+            EVENT_KEY_TOOLBAR, {
+                onToolbarInfo(it)
+            }
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -57,8 +67,8 @@ class MoviesActivity : BaseActivity<ActivityMoviesBinding>() {
 
             override fun onQueryTextChange(newText: String): Boolean {
                 supportFragmentManager.setFragmentResult(
-                    RESULT_QUERY_KEY,
-                    bundleOf(ARGUMENT_QUERY_KEY to newText)
+                    EVENT_SEARCH_KEY,
+                    bundleOf(RESULT_SEARCH_KEY to newText)
                 )
                 return false
             }
@@ -122,4 +132,14 @@ class MoviesActivity : BaseActivity<ActivityMoviesBinding>() {
         )
     }
 
+    private fun onToolbarInfo(it: Bundle) {
+        val errorMsg = it.getString(RESULT_KEY_ERROR) ?: ""
+
+        viewBinding.includedToolbar.errorBar.setVisible(errorMsg != "")
+        viewBinding.includedToolbar.errorBar.text = errorMsg
+
+        viewBinding.includedToolbar.progressBar.setVisible(
+            it.getBoolean(RESULT_KEY_PROGRESS) ?: false
+        )
+    }
 }

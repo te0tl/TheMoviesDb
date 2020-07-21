@@ -15,7 +15,6 @@ import com.te0tl.commons.platform.extension.android.showAlertDialog
 import com.te0tl.commons.platform.extension.android.showToast
 import com.te0tl.commons.presentation.BaseView
 import com.te0tl.themoviesdb.R
-import kotlinx.android.synthetic.main.toolbar.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -34,10 +33,11 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity(), BaseView<VB
 
         parseArguments(intent?.extras)
 
-        if (standardViewBinding)
+        if (standardViewBinding) {
             setContentView(viewBinding.root)
+            setupToolbar()
+        }
 
-        setupToolbar()
         setupFragmentManager()
     }
 
@@ -46,13 +46,9 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity(), BaseView<VB
         onViewAndExtrasReady()
     }
 
-    protected fun getToolbar(): Toolbar {
-        return toolbar
-    }
-
     protected open fun setupToolbar() {
-        toolbar?.apply {
-            setSupportActionBar(toolbar)
+        viewBinding.root.findViewById<Toolbar>(R.id.toolbar)?.apply {
+            setSupportActionBar(this)
         }
 
         if (showBackButton) {
