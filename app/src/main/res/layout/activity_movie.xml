@@ -7,7 +7,8 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-    <include layout="@layout/toolbar_image"/>
+    <include android:id="@+id/includedToolbar"
+            layout="@layout/toolbar_image"/>
 
     <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"

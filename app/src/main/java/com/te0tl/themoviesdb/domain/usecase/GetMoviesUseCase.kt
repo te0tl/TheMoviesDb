@@ -9,6 +9,7 @@ import com.te0tl.themoviesdb.domain.entity.Movie
 import com.te0tl.themoviesdb.domain.repository.MoviesRepository
 import com.te0tl.themoviesdb.platform.logging.Logger
 import kotlinx.coroutines.delay
+import java.lang.Error
 
 class GetMoviesUseCase(private val moviesRepository: MoviesRepository) :
     BaseUseCaseWithParam<Category, List<Movie>, String>() {
@@ -18,7 +19,9 @@ class GetMoviesUseCase(private val moviesRepository: MoviesRepository) :
     override suspend fun execute(param: Category): Result<List<Movie>, String> {
         return try {
             currentPage++
+
             when (val result = moviesRepository.getMovies(param, currentPage)) {
+
                 is Result.Success -> {
                     Result.Success(result.data)
                 }

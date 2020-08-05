@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.annotation.NonNull
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
@@ -11,10 +12,7 @@ import androidx.viewpager.widget.PagerAdapter
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-import com.te0tl.commons.platform.extension.android.hide
-import com.te0tl.commons.platform.extension.android.loadFromUrl
-import com.te0tl.commons.platform.extension.android.show
-import com.te0tl.commons.platform.extension.android.toggleFragment
+import com.te0tl.commons.platform.extension.android.*
 import com.te0tl.commons.presentation.activity.BaseActivity
 import com.te0tl.commons.presentation.activity.BaseViewModelActivity
 import com.te0tl.themoviesdb.R
@@ -24,8 +22,6 @@ import com.te0tl.themoviesdb.domain.entity.Movie
 import com.te0tl.themoviesdb.domain.entity.MovieDetail
 import com.te0tl.themoviesdb.domain.entity.YoutubeVideo
 import com.te0tl.themoviesdb.presentation.movies.ARGUMENT_KEY_CATEGORY
-import kotlinx.android.synthetic.main.activity_movies.*
-import kotlinx.android.synthetic.main.toolbar_image.*
 import org.jetbrains.anko.intentFor
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -63,10 +59,17 @@ class MovieActivity : BaseViewModelActivity<ActivityMovieBinding, MovieState, Mo
 
     override fun onViewAndExtrasReady() {
         with(viewBinding) {
-            collapsingToolbar.title = title
-            imageView.loadFromUrl(posterUrl)
+            includedToolbar.collapsingToolbar.title = title
+            includedToolbar.imageView.loadFromUrl(posterUrl)
         }
         viewModel.getMovieDetail(id)
+
+        val imageView = findViewById<ImageView>(R.id.imageView)
+
+        imageView.setOnClickListener {
+
+        }
+
     }
 
     override fun onNewViewModelState(newState: MovieState) {
@@ -96,7 +99,7 @@ class MovieActivity : BaseViewModelActivity<ActivityMovieBinding, MovieState, Mo
     private fun onMovieDetailReady(movie: MovieDetail) {
         with(viewBinding) {
             textViewOverview.text = movie.overview
-            imageView.loadFromUrl(movie.backdropUrl)
+            includedToolbar.imageView.loadFromUrl(movie.backdropUrl)
             textViewTitle.text = movie.title
             textViewOriginalTitle.text = getString(R.string.original_title)
                 .replace("{original_title}", movie.originalTitle)

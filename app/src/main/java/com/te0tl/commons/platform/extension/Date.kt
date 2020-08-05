@@ -2,56 +2,57 @@ package com.te0tl.commons.platform.extension
 
 import java.text.SimpleDateFormat
 import java.util.*
+
 /**
  * Pattern: yyyy-MM-dd HH:mm:ss
  */
-fun Date.formatToServerDateTimeDefaults(): String{
-    val sdf= SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+fun Date.formatToServerDateTimeDefaults(): String {
+    val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
     return sdf.format(this)
 }
 
-fun Date.formatToTruncatedDateTime(): String{
-    val sdf= SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault())
+fun Date.formatToTruncatedDateTime(): String {
+    val sdf = SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault())
     return sdf.format(this)
 }
 
 /**
  * Pattern: yyyy-MM-dd
  */
-fun Date.formatToServerDateDefaults(): String{
-    val sdf= SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+fun Date.formatToServerDateDefaults(): String {
+    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     return sdf.format(this)
 }
 
 /**
  * Pattern: HH:mm:ss
  */
-fun Date.formatToServerTimeDefaults(): String{
-    val sdf= SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+fun Date.formatToServerTimeDefaults(): String {
+    val sdf = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
     return sdf.format(this)
 }
 
 /**
  * Pattern: dd/MM/yyyy HH:mm:ss
  */
-fun Date.formatToViewDateTimeDefaults(): String{
-    val sdf= SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+fun Date.formatToViewDateTimeDefaults(): String {
+    val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
     return sdf.format(this)
 }
 
 /**
  * Pattern: dd/MM/yyyy
  */
-fun Date.formatToViewDateDefaults(): String{
-    val sdf= SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+fun Date.formatToViewDateDefaults(): String {
+    val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     return sdf.format(this)
 }
 
 /**
  * Pattern: HH:mm:ss
  */
-fun Date.formatToViewTimeDefaults(): String{
-    val sdf= SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+fun Date.formatToViewTimeDefaults(): String {
+    val sdf = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
     return sdf.format(this)
 }
 
@@ -67,21 +68,26 @@ fun Date.add(field: Int, amount: Int): Date {
     }
 }
 
-fun Date.addYears(years: Int): Date{
+fun Date.addYears(years: Int): Date {
     return add(Calendar.YEAR, years)
 }
+
 fun Date.addMonths(months: Int): Date {
     return add(Calendar.MONTH, months)
 }
-fun Date.addDays(days: Int): Date{
+
+fun Date.addDays(days: Int): Date {
     return add(Calendar.DAY_OF_MONTH, days)
 }
-fun Date.addHours(hours: Int): Date{
+
+fun Date.addHours(hours: Int): Date {
     return add(Calendar.HOUR_OF_DAY, hours)
 }
-fun Date.addMinutes(minutes: Int): Date{
+
+fun Date.addMinutes(minutes: Int): Date {
     return add(Calendar.MINUTE, minutes)
 }
-fun Date.addSeconds(seconds: Int): Date{
+
+fun Date.addSeconds(seconds: Int): Date {
     return add(Calendar.SECOND, seconds)
 }

@@ -34,6 +34,12 @@
                 android:name=".presentation.movie.MovieActivity"
                 android:configChanges="keyboardHidden|orientation|screenSize"/>
 
+        <activity
+                android:name=".presentation.AboutUsActivity"/>
+
+        <activity
+                android:name=".presentation.comments.CommentsActivity"/>
+
     </application>
 
 </manifest>

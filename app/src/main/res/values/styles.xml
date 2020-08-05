@@ -20,4 +20,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AboutUs" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">#2196F3</item>
+    </style>
+
 </resources>

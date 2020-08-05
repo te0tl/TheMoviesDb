@@ -15,6 +15,7 @@ class MoviesViewModel(private val context: Context, private val getMoviesUseCase
     BaseViewModel<MoviesState>() {
 
     fun getMovies(category: Category, showLoading: Boolean = true) {
+
         uiScope.launch {
 
             if (showLoading)
@@ -31,6 +32,7 @@ class MoviesViewModel(private val context: Context, private val getMoviesUseCase
             }
 
         }
+        Logger.d("mensaje")
     }
 
     fun getMoreMovies(category: Category) {

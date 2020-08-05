@@ -45,16 +45,18 @@ class MoviesRepositoryImpl(private val context: Context, private val tmdbApi: Tm
                         if (!context.hasNetworkConnection()) {
                             Result.Failure(context.getString(R.string.no_network_error))
                         } else {
-                            Result.Success(tmdbApi.getMovies(
-                                Mapper.toCategoryDto(category),
-                                page
-                            ).movies
-                                .map {
-                                    Movie(
-                                        it.id, it.title, it.overview, it.releaseDate,
-                                        BASE_URL_IMAGES + "w400/" + it.pathUrl
-                                    )
-                                })
+                            Result.Success(
+                                tmdbApi.getMovies(
+                                    Mapper.toCategoryDto(category),
+                                    page
+                                ).movies
+                                    .map {
+                                        Movie(
+                                            it.id, it.title, it.overview, it.releaseDate,
+                                            BASE_URL_IMAGES + "w400/" + it.pathUrl
+                                        )
+                                    }
+                            )
                         }
 
                     }

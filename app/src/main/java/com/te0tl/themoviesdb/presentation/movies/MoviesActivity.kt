@@ -2,17 +2,21 @@ package com.te0tl.themoviesdb.presentation.movies
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
+import androidx.core.view.GravityCompat
+import com.google.android.material.navigation.NavigationView
 import com.te0tl.commons.platform.extension.android.*
 import com.te0tl.commons.presentation.activity.BaseActivity
 import com.te0tl.themoviesdb.R
 import com.te0tl.themoviesdb.databinding.ActivityMoviesBinding
 import com.te0tl.themoviesdb.domain.entity.Category
 import com.te0tl.themoviesdb.domain.entity.Movie
+import com.te0tl.themoviesdb.presentation.AboutUsActivity
+import com.te0tl.themoviesdb.presentation.comments.CommentsActivity
 import com.te0tl.themoviesdb.presentation.movie.*
-import kotlinx.android.synthetic.main.activity_movies.*
-import kotlinx.android.synthetic.main.toolbar.view.*
 import org.jetbrains.anko.intentFor
 
 const val EVENT_KEY_TOOLBAR = "EVENT_KEY_TOOLBAR"
@@ -48,6 +52,7 @@ class MoviesActivity : BaseActivity<ActivityMoviesBinding>() {
     }
 
     override fun onViewAndExtrasReady() {
+        setupFragmentsNavigation()
         setupNavigation()
         setFragmentResultListener(
             EVENT_KEY_TOOLBAR, {
@@ -57,7 +62,7 @@ class MoviesActivity : BaseActivity<ActivityMoviesBinding>() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.movies_home_menu, menu)
+        menuInflater.inflate(R.menu.movies_actionbar_menu, menu)
 
         val searchItem = menu?.findItem(R.id.action_search)
         val searchView = searchItem?.actionView as SearchView
@@ -82,10 +87,10 @@ class MoviesActivity : BaseActivity<ActivityMoviesBinding>() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    private fun setupNavigation() {
+    private fun setupFragmentsNavigation() {
         currentFragment = popularMoviesFragment
 
-        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+        viewBinding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_popular -> {
                     toggleFragment(
@@ -118,7 +123,32 @@ class MoviesActivity : BaseActivity<ActivityMoviesBinding>() {
             }
             true
         }
-        bottomNavigationView.selectedItemId = R.id.navigation_popular
+        viewBinding.bottomNavigationView.selectedItemId = R.id.navigation_popular
+    }
+
+    private fun setupNavigation() {
+        val toggle = ActionBarDrawerToggle(
+            this, viewBinding.drawerLayout, viewBinding.includedToolbar.toolbar, 0, 0
+        )
+        viewBinding.drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+        viewBinding.navigationView.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.nav_comments -> {
+                    startActivity(
+                        intentFor<CommentsActivity>()
+                    )
+                }
+                R.id.nav_about_us -> {
+                    startActivity(
+                        intentFor<AboutUsActivity>()
+                    )
+                }
+            }
+            viewBinding.drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        })
+
     }
 
     fun intentToDetailMovie(movie: Movie, category: Category) {

@@ -1,13 +1,13 @@
 package com.te0tl.themoviesdb.platform.logging
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import com.orhanobut.logger.PrettyFormatStrategy
 import com.te0tl.themoviesdb.BuildConfig
 import timber.log.Timber
-import java.lang.StringBuilder
-import java.util.*
 
 object Logger {
 
@@ -27,19 +27,16 @@ object Logger {
         Timber.i(exception)
     }
 
-    fun d(message: String) {
-        Timber.d(message)
-    }
-
-    fun d(exception: Throwable) {
-        Timber.d(exception)
+    @SuppressLint("TimberArgCount")
+    fun d(message: String, vararg objects: Any) {
+        Timber.d(message, objects)
     }
 
     fun setupLogger(context: Context) {
         val formatStrategy = PrettyFormatStrategy.newBuilder()
-                .methodOffset(5)
-                .showThreadInfo(false)
-                .build()
+            .methodOffset(5)
+            .showThreadInfo(false)
+            .build()
 
         Logger.addLogAdapter(object : AndroidLogAdapter(formatStrategy) {
             override fun isLoggable(priority: Int, tag: String?): Boolean {
@@ -84,6 +81,34 @@ object Logger {
                 return message.plus(builder.toString())
             }
 
+            @SuppressLint("TimberArgCount")
+            override fun d(message: String?, vararg args: Any?) {
+                super.d("${threadInfo()} $message", *args)
+            }
+
+            private fun threadInfo(): String {
+                return "Thread: ${Thread.currentThread().name} ${Thread.currentThread().id} \n" +
+                        "${getCustomStackTrace(Thread.currentThread().stackTrace)}\n"
+            }
+
+
+            private fun getCustomStackTrace(stackTraceElement: Array<StackTraceElement>): String {
+                val stringBuilder = StringBuilder()
+                stackTraceElement.forEach {
+                    if ((it.className.contains(BuildConfig.APPLICATION_ID)
+                                || it.className.contains("com.te0tl.commons"))
+                        && !it.className.contains("platform.logging.")
+                    ) {
+
+                        stringBuilder.append(it.toString()
+                            .replace(BuildConfig.APPLICATION_ID + ".", "")
+                            .replace("com.te0tl.commons.", ""))
+                        stringBuilder.append("\n")
+                    }
+                }
+
+                return stringBuilder.toString()
+            }
         })
     }
 

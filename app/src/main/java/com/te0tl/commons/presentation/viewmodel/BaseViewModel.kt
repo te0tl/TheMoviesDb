@@ -23,7 +23,7 @@ abstract class BaseViewModel<VS> : ViewModel() {
         }
     }
 
-    protected fun updateViewModelState(newState: VS?, post: Boolean = true) {
+    protected fun updateViewModelState(newState: VS, post: Boolean = true) {
         if (post) viewStateLiveData.postValue(newState) else viewStateLiveData.value = newState
     }
 
@@ -31,14 +31,14 @@ abstract class BaseViewModel<VS> : ViewModel() {
         innersObservers.add(observer)
         viewStateLiveData.observeForever(observer)
         currentState?.also {
-            updateViewModelState(currentState)
+            updateViewModelState(it)
         }
     }
 
     fun observeViewModelState(owner: LifecycleOwner, onChanged: (newState: VS) -> Unit) {
         viewStateLiveData.observe(owner, Observer { onChanged(it) })
         currentState?.also {
-            updateViewModelState(currentState)
+            updateViewModelState(it)
         }
     }
 

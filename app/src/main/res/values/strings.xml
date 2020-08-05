@@ -8,4 +8,22 @@
 
     <string name="homepage">Homepage: {homepage}</string>
 
+    <string name="nav_comments">Comments</string>
+    <string name="nav_about_us">About us</string>
+
+
+    <string name="about_us"><![CDATA[
+        This is a sample project for testing newest Android features and Android development state of art using best practices and standards.<br/><br/>
+        Send us an email if you have any comments <br/><b>teotl.b.h@gmail.com</b>, or in the comments section leave your thoughts.<br/><br/>
+        Check out the source code in <br/><b>https://github.com/te0tl/TheMoviesDb</b>
+        ]]>
+    </string>
+    <string name="hint_comment">Write your comment</string>
+    <string name="hint_nickname">Your nickname</string>
+    <string name="send">Send</string>
+
+    <string name="publisher_not_valid">Nickname should be at least 5 characters.</string>
+
+    <string name="comment_not_valid">Comment should be at least 5 words.</string>
+
 </resources>

@@ -4,12 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.te0tl.commons.platform.extension.android.inflate
-import kotlinx.android.extensions.LayoutContainer
 import kotlin.properties.Delegates
 
 /**
@@ -64,6 +62,15 @@ abstract class BaseRecyclerViewAdapter<VB : ViewBinding, M>(private val searchab
             itemsFiltered = items.toMutableList()
             itemsOriginals = items.toMutableList()
             performSearch(lastQuery)
+        }
+    }
+
+    fun replaceItems(items: List<M>) {
+        if (searchable) {
+            this.itemsOriginals = items.toMutableList()
+            performSearch(lastQuery)
+        } else {
+            this.items = items.toMutableList()
         }
     }
 

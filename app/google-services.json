@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "234653469702",
+    "firebase_url": "https://teotl---ebh---samples.firebaseio.com",
+    "project_id": "teotl---ebh---samples",
+    "storage_bucket": "teotl---ebh---samples.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:234653469702:android:29dbfb04a0de993dadc787",
+        "android_client_info": {
+          "package_name": "com.te0tl.themoviesdb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "234653469702-7f38ttvhivlpp7pqdll6cp4rg89mabta.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmlbcl1WaCxd3UTdMSjmSEzeAZPg877-8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "234653469702-7f38ttvhivlpp7pqdll6cp4rg89mabta.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

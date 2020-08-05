@@ -3,8 +3,7 @@ apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-kapt"
 
-apply plugin: "kotlin-android-extensions"
-
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -44,24 +43,20 @@ android {
         }
     }
 
-    dataBinding {
-        enabled = true
-    }
-
     buildFeatures {
         viewBinding = true
     }
 }
 
-dependencies {
 
+dependencies {
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
     //#####################################################################
     //          Kotlin
     //#####################################################################
-    versions.kotlin_coroutines = "1.3.7"
+    versions.kotlin_coroutines = "1.3.8"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.kotlin_coroutines"
@@ -86,9 +81,11 @@ dependencies {
 
     implementation "androidx.multidex:multidex:2.0.1"
     implementation "androidx.appcompat:appcompat:$versions.androidx"
+    implementation "androidx.core:core-ktx:$versions.androidx"
 
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.androidx_lifecycle"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$versions.androidx_lifecycle"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.androidx_lifecycle"
     implementation "androidx.lifecycle:lifecycle-common-java8:$versions.androidx_lifecycle"
 
     implementation "androidx.work:work-runtime-ktx:$versions.androidx_work"
@@ -97,6 +94,14 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:1.1.3"
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     implementation 'androidx.viewpager:viewpager:1.0.0'
+
+
+    //#####################################################################
+    //          Firebase
+    //#####################################################################
+    versions.firebase = "21.2.1"
+    implementation "com.google.firebase:firebase-firestore-ktx:$versions.firebase"
+
 
     //#####################################################################
     //          Anko
