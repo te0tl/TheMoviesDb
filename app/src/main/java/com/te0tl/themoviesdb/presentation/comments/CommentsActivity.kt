@@ -1,11 +1,12 @@
 package com.te0tl.themoviesdb.presentation.comments
 
 import androidx.appcompat.app.AlertDialog
-import com.te0tl.commons.domain.FormValidator
-import com.te0tl.commons.platform.extension.android.*
-import com.te0tl.commons.platform.extension.formatToViewDateTimeDefaults
-import com.te0tl.commons.presentation.activity.BaseViewModelActivity
-import com.te0tl.commons.presentation.view.BaseRecyclerViewAdapter
+import com.te0tl.common.domain.FormValidator
+import com.te0tl.common.platform.extension.android.*
+import com.te0tl.common.platform.extension.formatToViewDateTimeDefaults
+import com.te0tl.common.presentation.activity.BaseViewModelActivity
+import com.te0tl.common.presentation.view.BaseRecyclerViewAdapter
+import com.te0tl.common.presentation.view.BaseRecyclerViewAdapterV2
 import com.te0tl.themoviesdb.R
 import com.te0tl.themoviesdb.databinding.ActivityCommentsBinding
 import com.te0tl.themoviesdb.databinding.DialogAddCommentBinding
@@ -16,7 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CommentsActivity :
     BaseViewModelActivity<ActivityCommentsBinding, CommentsState, CommentsViewModel>(),
-    BaseRecyclerViewAdapter.ItemClickListener<Comment> {
+    BaseRecyclerViewAdapterV2.ItemClickListener<Comment> {
 
     override val viewBinding: ActivityCommentsBinding by lazy {
         ActivityCommentsBinding.inflate(layoutInflater)
@@ -37,7 +38,7 @@ class CommentsActivity :
         }
 
         commentsAdapter = CommentsAdapter()
-        commentsAdapter.itemClickListener = this
+        commentsAdapter.setOnItemClickListener(this)
 
         viewBinding.recyclerView.adapter = commentsAdapter
 
@@ -52,7 +53,7 @@ class CommentsActivity :
                 is CommentsState.CommentsReady -> {
                     includedToolbar.errorBar.hide()
                     includedToolbar.errorBar.text = ""
-                    commentsAdapter.replaceItems(newState.comments)
+                    commentsAdapter.submitList(newState.comments)
                     recyclerView.scrollToPosition(newState.comments.size - 1);
 
                 }

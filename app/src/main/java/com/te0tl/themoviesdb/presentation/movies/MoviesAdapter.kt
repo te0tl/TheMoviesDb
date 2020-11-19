@@ -2,14 +2,10 @@ package com.te0tl.themoviesdb.presentation.movies
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.te0tl.commons.platform.extension.android.inflate
-import com.te0tl.commons.platform.extension.android.loadFromUrl
-import com.te0tl.commons.presentation.view.BaseRecyclerViewAdapter
-import com.te0tl.themoviesdb.R
+import com.te0tl.common.platform.extension.android.loadFromUrl
+import com.te0tl.common.presentation.view.BaseRecyclerViewAdapter
 import com.te0tl.themoviesdb.databinding.RecyclerviewMovieItemBinding
 import com.te0tl.themoviesdb.domain.entity.Movie
-import com.te0tl.themoviesdb.platform.logging.Logger
-import java.lang.StringBuilder
 
 class MoviesAdapter : BaseRecyclerViewAdapter<RecyclerviewMovieItemBinding, Movie>(true) {
 

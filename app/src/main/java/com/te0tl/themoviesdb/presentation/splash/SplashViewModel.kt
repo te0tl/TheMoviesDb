@@ -1,6 +1,6 @@
 package com.te0tl.themoviesdb.presentation.splash
 
-import com.te0tl.commons.presentation.viewmodel.BaseViewModel
+import com.te0tl.common.presentation.viewmodel.BaseViewModel
 import kotlinx.coroutines.launch
 
 class SplashViewModel : BaseViewModel<SplashState>() {

@@ -1,27 +1,20 @@
 package com.te0tl.themoviesdb.presentation.movie
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.NonNull
-import androidx.appcompat.widget.SearchView
-import androidx.core.os.bundleOf
 import androidx.viewpager.widget.PagerAdapter
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-import com.te0tl.commons.platform.extension.android.*
-import com.te0tl.commons.presentation.activity.BaseActivity
-import com.te0tl.commons.presentation.activity.BaseViewModelActivity
+import com.te0tl.common.platform.extension.android.*
+import com.te0tl.common.presentation.activity.BaseViewModelActivity
 import com.te0tl.themoviesdb.R
 import com.te0tl.themoviesdb.databinding.ActivityMovieBinding
-import com.te0tl.themoviesdb.domain.entity.Category
-import com.te0tl.themoviesdb.domain.entity.Movie
 import com.te0tl.themoviesdb.domain.entity.MovieDetail
 import com.te0tl.themoviesdb.domain.entity.YoutubeVideo
-import com.te0tl.themoviesdb.presentation.movies.ARGUMENT_KEY_CATEGORY
 import org.jetbrains.anko.intentFor
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

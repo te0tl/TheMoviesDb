@@ -1,9 +1,9 @@
 package com.te0tl.themoviesdb.data.repository
 
 import android.content.Context
-import com.te0tl.commons.domain.Result
-import com.te0tl.commons.platform.extension.android.hasNetworkConnection
-import com.te0tl.commons.platform.extension.safeMessage
+import com.te0tl.common.domain.Res
+import com.te0tl.common.platform.extension.android.hasNetworkConnection
+import com.te0tl.common.platform.extension.safeMessage
 import com.te0tl.themoviesdb.R
 import com.te0tl.themoviesdb.data.api.BASE_URL_IMAGES
 import com.te0tl.themoviesdb.data.api.TmdbApi
@@ -33,19 +33,19 @@ class MoviesRepositoryImpl(private val context: Context, private val tmdbApi: Tm
         mutableMapOf<Int, Pair<MovieDetail, Long>>()
     }
 
-    override suspend fun getMovies(category: Category, page: Int): Result<List<Movie>, String> =
+    override suspend fun getMovies(category: Category, page: Int): Res<List<Movie>, String> =
         withContext(Dispatchers.IO) {
             try {
                 when {
                     !isCacheMoviesExpired(category, page) -> {
-                        Result.Success(memoryMoviesCache[category]!!.first)
+                        Res.Success(memoryMoviesCache[category]!!.first)
                     }
 
                     else -> {
                         if (!context.hasNetworkConnection()) {
-                            Result.Failure(context.getString(R.string.no_network_error))
+                            Res.Failure(context.getString(R.string.no_network_error))
                         } else {
-                            Result.Success(
+                            Res.Success(
                                 tmdbApi.getMovies(
                                     Mapper.toCategoryDto(category),
                                     page
@@ -63,28 +63,28 @@ class MoviesRepositoryImpl(private val context: Context, private val tmdbApi: Tm
                 }
 
             } catch (e: Exception) {
-                Result.Failure(e.safeMessage)
+                Res.Failure(e.safeMessage)
             }
 
         }
 
-    override suspend fun getMovieDetail(id: Int): Result<MovieDetail, String> =
+    override suspend fun getMovieDetail(id: Int): Res<MovieDetail, String> =
         withContext(Dispatchers.IO) {
             try {
                 when {
                     !isCacheMovieExpired(id) && memoryMoviesDetailsCache[id]?.first != null -> {
-                        Result.Success(memoryMoviesDetailsCache[id]?.first!!)
+                        Res.Success(memoryMoviesDetailsCache[id]?.first!!)
                     }
 
                     else -> {
 
                         if (!context.hasNetworkConnection()) {
-                            Result.Failure(context.getString(R.string.no_network_error))
+                            Res.Failure(context.getString(R.string.no_network_error))
                         } else {
                             val movieRepo = tmdbApi.getMovie(id)
                             val movies =
                                 when (val videosYoutube = getMovieYoutubeVideos(id)) {
-                                    is Result.Success -> {
+                                    is Res.Success -> {
                                         videosYoutube.data
                                     }
                                     else -> {
@@ -103,32 +103,32 @@ class MoviesRepositoryImpl(private val context: Context, private val tmdbApi: Tm
                                 movies
                             )
                             memoryMoviesDetailsCache[id] = movieDetail to System.currentTimeMillis()
-                            Result.Success(movieDetail)
+                            Res.Success(movieDetail)
                         }
 
                     }
                 }
 
             } catch (e: Exception) {
-                Result.Failure(e.safeMessage)
+                Res.Failure(e.safeMessage)
             }
         }
 
     suspend fun getMovieYoutubeVideos(
         id: Int
-    ): Result<List<YoutubeVideo>, String> = withContext(Dispatchers.IO) {
+    ): Res<List<YoutubeVideo>, String> = withContext(Dispatchers.IO) {
         try {
             if (!context.hasNetworkConnection()) {
-                Result.Failure(context.getString(R.string.no_network_error))
+                Res.Failure(context.getString(R.string.no_network_error))
             } else {
-                Result.Success(tmdbApi.getVideos(id).videos
+                Res.Success(tmdbApi.getVideos(id).videos
                     .filter { it.site.equals("YouTube") }
                     .map {
                         YoutubeVideo(it.key, it.name)
                     })
             }
         } catch (e: Exception) {
-            Result.Failure(e.safeMessage)
+            Res.Failure(e.safeMessage)
         }
     }
 

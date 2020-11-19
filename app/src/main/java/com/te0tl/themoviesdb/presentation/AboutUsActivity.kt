@@ -2,11 +2,9 @@ package com.te0tl.themoviesdb.presentation
 
 import android.text.Html
 import android.text.Html.FROM_HTML_MODE_LEGACY
-import android.text.Spanned
-import com.te0tl.commons.presentation.activity.BaseActivity
+import com.te0tl.common.presentation.activity.BaseActivity
 import com.te0tl.themoviesdb.R
 import com.te0tl.themoviesdb.databinding.ActivityAboutUsBinding
-import com.te0tl.themoviesdb.databinding.ActivityMoviesBinding
 
 
 class AboutUsActivity : BaseActivity<ActivityAboutUsBinding>() {

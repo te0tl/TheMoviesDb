@@ -1,14 +1,14 @@
 package com.te0tl.themoviesdb.presentation.movies
 
 import android.content.Context
-import com.te0tl.commons.domain.Result
-import com.te0tl.commons.domain.ifFailure
-import com.te0tl.commons.domain.ifSuccess
-import com.te0tl.commons.presentation.viewmodel.BaseViewModel
+import com.te0tl.common.domain.Res
+import com.te0tl.common.domain.ifFailure
+import com.te0tl.common.domain.ifSuccess
+import com.te0tl.common.presentation.viewmodel.BaseViewModel
 import com.te0tl.themoviesdb.domain.entity.Category
 import com.te0tl.themoviesdb.domain.entity.Movie
 import com.te0tl.themoviesdb.domain.usecase.GetMoviesUseCase
-import com.te0tl.themoviesdb.platform.logging.Logger
+import com.te0tl.themoviesdb.infrastructure.logging.Logger
 import kotlinx.coroutines.launch
 
 class MoviesViewModel(private val context: Context, private val getMoviesUseCase: GetMoviesUseCase) :
@@ -21,13 +21,13 @@ class MoviesViewModel(private val context: Context, private val getMoviesUseCase
             if (showLoading)
                 updateViewModelState(MoviesState.Loading)
 
-            val result: Result<List<Movie>, String> = getMoviesUseCase(category)
+            val res: Res<List<Movie>, String> = getMoviesUseCase(category)
 
-            result.ifSuccess {
+            res.ifSuccess {
                 updateViewModelState(MoviesState.MoviesReady(it))
             }
 
-            result.ifFailure {
+            res.ifFailure {
                 updateViewModelState(MoviesState.Error(it))
             }
 

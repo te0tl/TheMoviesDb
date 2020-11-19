@@ -3,10 +3,10 @@ package com.te0tl.themoviesdb.presentation.movies
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import com.te0tl.commons.platform.extension.android.sendFragmentResult
-import com.te0tl.commons.platform.extension.android.setFragmentResultListener
-import com.te0tl.commons.presentation.fragment.BaseViewModelFragment
-import com.te0tl.commons.presentation.view.BaseRecyclerViewAdapter
+import com.te0tl.common.platform.extension.android.sendFragmentResult
+import com.te0tl.common.platform.extension.android.setFragmentResultListener
+import com.te0tl.common.presentation.fragment.BaseViewModelFragment
+import com.te0tl.common.presentation.view.BaseRecyclerViewAdapter
 import com.te0tl.themoviesdb.databinding.FragmentMoviesBinding
 import com.te0tl.themoviesdb.domain.entity.Category
 import com.te0tl.themoviesdb.domain.entity.Movie

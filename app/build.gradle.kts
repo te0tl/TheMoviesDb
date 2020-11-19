@@ -106,7 +106,7 @@ dependencies {
     //#####################################################################
     //          Koin
     //#####################################################################
-    val koinVersion = "2.1.5"
+    val koinVersion = "2.2.0-beta-1"
     implementation("org.koin:koin-android:$koinVersion")
     implementation("org.koin:koin-androidx-scope:$koinVersion")
     implementation("org.koin:koin-androidx-viewmodel:$koinVersion")
@@ -142,6 +142,7 @@ dependencies {
     //          Firebase
     //#####################################################################
     implementation("com.google.firebase:firebase-firestore-ktx:$firebaseVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1")
 
 
     //#####################################################################

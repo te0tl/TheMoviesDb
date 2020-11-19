@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:background="@android:color/white"
-                app:layout_behavior="com.te0tl.commons.presentation.view.BottomNavigationBehavior"
+                app:layout_behavior="com.te0tl.common.presentation.view.BottomNavigationBehavior"
                 app:menu="@menu/movies_nav_bottom_menu" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

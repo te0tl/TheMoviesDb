@@ -1,8 +1,8 @@
 
 import androidx.fragment.app.testing.FragmentScenario
 import com.agoda.kakao.screen.Screen
-import com.te0tl.commons.presentation.fragment.BaseFragment
-import com.te0tl.commons.presentation.viewmodel.BaseViewModel
+import com.te0tl.common.presentation.fragment.BaseFragment
+import com.te0tl.common.presentation.viewmodel.BaseViewModel
 import com.te0tl.themoviesdb.EmptyApp
 import org.junit.runner.RunWith
 import org.koin.test.AutoCloseKoinTest

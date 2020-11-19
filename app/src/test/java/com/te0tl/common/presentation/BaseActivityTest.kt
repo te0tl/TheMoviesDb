@@ -1,8 +1,8 @@
 
 import androidx.test.core.app.ActivityScenario
 import com.agoda.kakao.screen.Screen
-import com.te0tl.commons.presentation.activity.BaseActivity
-import com.te0tl.commons.presentation.viewmodel.BaseViewModel
+import com.te0tl.common.presentation.activity.BaseActivity
+import com.te0tl.common.presentation.viewmodel.BaseViewModel
 import com.te0tl.themoviesdb.EmptyApp
 import org.junit.runner.RunWith
 import org.koin.test.AutoCloseKoinTest

@@ -2,14 +2,13 @@ package com.te0tl.themoviesdb.presentation.movies
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
-import com.te0tl.commons.platform.extension.android.*
-import com.te0tl.commons.presentation.activity.BaseActivity
+import com.te0tl.common.platform.extension.android.*
+import com.te0tl.common.presentation.activity.BaseActivity
 import com.te0tl.themoviesdb.R
 import com.te0tl.themoviesdb.databinding.ActivityMoviesBinding
 import com.te0tl.themoviesdb.domain.entity.Category

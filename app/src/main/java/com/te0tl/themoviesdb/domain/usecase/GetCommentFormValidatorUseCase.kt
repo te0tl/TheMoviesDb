@@ -1,10 +1,10 @@
 package com.te0tl.themoviesdb.domain.usecase
 
-import com.te0tl.commons.domain.*
+import com.te0tl.common.domain.*
 
 class GetCommentFormValidatorUseCase() : BaseUseCase<FormValidator<FormComments>, String>() {
 
-    override suspend fun execute(): Result<FormValidator<FormComments>, String> = Result.Success(
+    override suspend fun execute(): Res<FormValidator<FormComments>, String> = Res.Success(
         FormValidator<FormComments>(
 
             mapOf(

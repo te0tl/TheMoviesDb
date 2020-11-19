@@ -2,9 +2,10 @@ package com.te0tl.themoviesdb.presentation.comments
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.te0tl.commons.domain.FormValidator
-import com.te0tl.commons.domain.Result
-import com.te0tl.commons.presentation.viewmodel.BaseViewModel
+import com.te0tl.common.domain.FormValidator
+import com.te0tl.common.domain.Res
+import com.te0tl.common.domain.ResDef
+import com.te0tl.common.presentation.viewmodel.BaseViewModel
 import com.te0tl.themoviesdb.domain.entity.Comment
 import com.te0tl.themoviesdb.domain.usecase.*
 import kotlinx.coroutines.flow.collect
@@ -28,12 +29,12 @@ class CommentsViewModel(
         viewModelScope.launch {
             getCommentsUseCase().collect {
                 when (it) {
-                    is Result.Success -> {
+                    is ResDef.Success -> {
                         comments.add(it.data)
                         updateViewModelState(CommentsState.CommentsReady(comments))
                     }
-                    is Result.Failure -> {
-                        updateViewModelState(CommentsState.Error(it.error))
+                    is ResDef.Failure -> {
+                        updateViewModelState(CommentsState.Error(it.error.message))
                     }
                 }
             }
@@ -43,10 +44,10 @@ class CommentsViewModel(
     fun getCommentFormValidator() {
         viewModelScope.launch {
             when (val result = getCommentFormValidatorUseCase()) {
-                is Result.Success -> {
+                is Res.Success -> {
                     updateViewModelState(CommentsState.CommentFormValidatorReady(result.data))
                 }
-                is Result.Failure -> {
+                is Res.Failure -> {
                     updateViewModelState(CommentsState.Error(result.error))
                 }
             }
@@ -55,8 +56,9 @@ class CommentsViewModel(
 
     fun addComment(publisher: String, comment: String) {
         viewModelScope.launch {
-            when (val result = addCommentUseCase(Comment(publisher, comment))) {
-                is Result.Failure -> {
+            when (val result =
+                addCommentUseCase(Comment(publisher = publisher, comment = comment))) {
+                is Res.Failure -> {
                     updateViewModelState(CommentsState.Error(result.error))
                 }
             }
@@ -67,6 +69,8 @@ class CommentsViewModel(
 
 sealed class CommentsState {
     data class CommentsReady(val comments: List<Comment>) : CommentsState()
-    data class CommentFormValidatorReady(val formValidator: FormValidator<FormComments>) : CommentsState()
+    data class CommentFormValidatorReady(val formValidator: FormValidator<FormComments>) :
+        CommentsState()
+
     data class Error(val error: String) : CommentsState()
 }
